@@ -42,13 +42,15 @@ class ChargingStationValidator:
         if not (-180 <= lon <= 180):
             return False, f"Invalid longitude: {lon} (must be between -180 and 180)"
         
-        # Validate numeric fields
-        numeric_fields = ['charging_slots', 'fast_charging_slots', 'parking_slots']
-        for field in numeric_fields:
+        # Sanitize slot fields — API uses negative values (-1, -2) to mean "unknown"
+        slot_fields = ['charging_slots', 'fast_charging_slots', 'parking_slots']
+        for field in slot_fields:
             value = station.get(field)
-            if value is not None and (not isinstance(value, (int, float)) or value < 0):
-                return False, f"Invalid {field}: {value} (must be non-negative number)"
-        
+            if value is not None and isinstance(value, (int, float)) and value < 0:
+                station[field] = None
+            elif value is not None and not isinstance(value, (int, float)):
+                return False, f"Invalid {field}: {value} (must be a number)"
+
         return True, None
     
     @staticmethod
