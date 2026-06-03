@@ -1,0 +1,22 @@
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-f'
+      - 'Dockerfile'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/charging-station-scraper:latest'
+      - '.'
+
+  # Push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/charging-station-scraper:latest']
+
+images:
+  - 'gcr.io/$PROJECT_ID/charging-station-scraper:latest'
+
+options:
+  machineType: 'E2_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY
+
