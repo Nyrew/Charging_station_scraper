@@ -77,8 +77,9 @@ class Config:
     
     @staticmethod
     def get_database_url() -> Optional[str]:
-        """Get PostgreSQL database URL."""
-        return os.getenv("DATABASE_URL")
+        """Get PostgreSQL database URL. SUPABASE_URL takes priority to avoid
+        collision with Railway's auto-injected DATABASE_URL (direct connection)."""
+        return os.getenv("SUPABASE_URL") or os.getenv("DATABASE_URL")
 
     @staticmethod
     def get_api_url() -> str:
