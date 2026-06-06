@@ -77,6 +77,7 @@ class PostgresImportLogger:
                         json.dumps(additional_info or {}),
                     ),
                 )
+            self.conn.commit()
             logger.debug(
                 f"📝 Logged {operation_type} on {collection_name}: "
                 f"+{inserted} ~{updated} -{deleted} ⊘{skipped} ✗{errors}"
